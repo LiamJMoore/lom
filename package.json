@@ -1,0 +1,10 @@
+{
+  "name": "portswigger-ai-pioneer-submission",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "AI Pioneer task submission — live demo",
+  "engines": {
+    "node": ">=18"
+  }
+}

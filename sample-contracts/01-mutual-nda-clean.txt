@@ -1,0 +1,47 @@
+MUTUAL NON-DISCLOSURE AGREEMENT
+
+This Mutual Non-Disclosure Agreement ("Agreement") is entered into on 28 April 2026 ("Effective Date")
+
+BETWEEN:
+
+(1) PortSwigger Ltd, a company registered in England and Wales (company number 06017205) whose registered office is at Houldsworth Mill, Houldsworth Street, Reddish, Stockport, SK5 6DA ("PortSwigger"); and
+
+(2) Meridian Analytics Limited, a company registered in England and Wales (company number 09812334) whose registered office is at 14 Curzon Street, London, W1J 5HN ("Counterparty").
+
+each a "Party" and together the "Parties".
+
+1. PURPOSE
+   The Parties wish to explore a potential business relationship relating to integration of analytics tooling with the Counterparty's product (the "Purpose"). In connection with the Purpose, each Party may disclose Confidential Information to the other.
+
+2. DEFINITIONS
+   "Confidential Information" means any information disclosed by one Party (the "Disclosing Party") to the other (the "Receiving Party"), whether orally, in writing or in any other form, that is marked as confidential or that a reasonable person would understand to be confidential given its nature and the circumstances of disclosure.
+
+3. OBLIGATIONS
+   3.1 The Receiving Party shall use the Confidential Information solely for the Purpose.
+   3.2 The Receiving Party shall protect the Confidential Information using at least the same degree of care it uses to protect its own confidential information of similar importance, and in any event no less than a reasonable standard of care.
+   3.3 The Receiving Party may disclose Confidential Information to its employees, officers, directors, and professional advisers who have a need to know for the Purpose, provided they are bound by confidentiality obligations no less protective than those in this Agreement.
+
+4. EXCLUSIONS
+   The obligations in clause 3 do not apply to information that:
+   (a) is or becomes publicly known through no fault of the Receiving Party;
+   (b) was known to the Receiving Party prior to disclosure without obligation of confidence;
+   (c) is independently developed by the Receiving Party without use of the Confidential Information; or
+   (d) is required to be disclosed by law or court order, provided the Receiving Party gives prompt notice where legally permitted.
+
+5. TERM
+   This Agreement shall continue for a period of two (2) years from the Effective Date. The obligations of confidentiality shall survive for three (3) years from the date of disclosure.
+
+6. RETURN OR DESTRUCTION
+   Upon written request, the Receiving Party shall promptly return or destroy all Confidential Information in its possession.
+
+7. NO LICENCE
+   Nothing in this Agreement grants any licence or right in any intellectual property of the Disclosing Party.
+
+8. GOVERNING LAW
+   This Agreement is governed by the laws of England and Wales. The Parties submit to the exclusive jurisdiction of the courts of England and Wales.
+
+SIGNED for and on behalf of PortSwigger Ltd:
+__________________________
+
+SIGNED for and on behalf of Meridian Analytics Limited:
+__________________________

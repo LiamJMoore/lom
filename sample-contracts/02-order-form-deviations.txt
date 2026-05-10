@@ -1,0 +1,52 @@
+CUSTOMER ORDER FORM
+
+Order Form Number: NL-2026-0431
+Date: 30 April 2026
+
+CUSTOMER:
+Northlake Software Ltd
+Registered office: Quayside House, 27 Newcastle Quay, Newcastle upon Tyne, NE1 3DE
+Company number: 11203847
+Primary contact: Helen Marsh, Chief Technology Officer, h.marsh@northlake.io
+
+SUPPLIER:
+PortSwigger Ltd
+Houldsworth Mill, Houldsworth Street, Reddish, Stockport, SK5 6DA
+
+1. PRODUCTS AND SERVICES
+   Burp Suite Enterprise Edition - 25 concurrent scan licences
+   Annual subscription, single tenant deployment
+
+2. SUBSCRIPTION TERM
+   Initial Term: twelve (12) months commencing 1 June 2026
+   Renewal: automatic for further 12-month periods unless either party gives 30 days' written notice prior to the end of the then-current term
+
+3. FEES AND PAYMENT
+   Annual subscription fee: £47,500 (excluding VAT)
+   Payment terms: Net 90 days from receipt of invoice.
+   Customer reserves the right to withhold payment of disputed amounts pending good-faith resolution.
+
+4. LIMITATION OF LIABILITY
+   Notwithstanding any other provision of this Agreement or the underlying Master Subscription Terms, each party's total aggregate liability arising out of or in connection with this Order Form, whether in contract, tort (including negligence), breach of statutory duty or otherwise, shall be limited to the fees paid by the Customer in the three (3) months immediately preceding the event giving rise to the claim.
+
+5. SERVICE LEVEL
+   The Supplier shall use commercially reasonable efforts to provide the Services in accordance with the Service Level commitments set out in the Master Subscription Terms.
+
+6. DATA PROCESSING
+   The parties acknowledge that the Data Processing Addendum forming part of the Master Subscription Terms applies to any processing of personal data under this Order Form.
+
+7. INCORPORATION
+   This Order Form is governed by and incorporates by reference the PortSwigger Master Subscription Terms available at portswigger.net/terms, save where expressly varied by this Order Form, in which case the terms of this Order Form shall prevail.
+
+8. ENTIRE AGREEMENT
+   This Order Form together with the Master Subscription Terms constitutes the entire agreement between the parties with respect to its subject matter.
+
+SIGNED for and on behalf of Northlake Software Ltd:
+Name: Helen Marsh
+Title: Chief Technology Officer
+Date: ______________
+
+SIGNED for and on behalf of PortSwigger Ltd:
+Name: ______________
+Title: ______________
+Date: ______________
