@@ -34,8 +34,36 @@ Vercel will automatically expose `api/triage.js` as a serverless function.
 
 ## Response fields
 
+## A note on how this was built
+
+This submission was built collaboratively with Claude. I'm flagging that up front in the document itself (see the disclosure block near the top), because pretending I wrote two thousand lines of CSS and JavaScript by hand in a focused day would be the wrong opening move with a security team. The framing, the architectural decisions, and the editorial judgment are mine; Claude wrote most of the code under direction.
+
+## Contact
+
+Liam Moore — Bolton, Greater Manchester
+
+
+## Live NDA triage endpoint
+
+This repo now includes a production-style serverless endpoint at `api/triage.js` for live NDA triage against a supplied playbook.
+
+### Endpoint
+- `POST /api/triage`
+
+### Request JSON
+```json
+{
+  "apiKey": "sk-ant-...",
+  "ndaText": "full NDA text...",
+  "playbookText": "playbook markdown/text..."
+}
+```
+
+### Response JSON
 - `verdict`: `SIGN` | `NEGOTIATE` | `REJECT`
-- `summary`: textual reasoning
-- `flags`: structured issues
-- `terminated`: model-loop termination reason
-- `turns_used`: turns consumed
+- `summary`: concise explanation
+- `flags`: array of clause findings
+- `terminated`: termination reason
+- `turns_used`: number of model turns used
+
+The endpoint validates input lengths, enforces tool-based structured output, and falls back to a severity-derived verdict if the model does not call `finish_review`.
