@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "AI Pioneer task submission — live demo",
+  "description": "AI Pioneer task submission \u2014 live demo",
   "engines": {
     "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test"
   }
 }

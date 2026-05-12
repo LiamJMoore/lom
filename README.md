@@ -34,3 +34,29 @@ This submission was built collaboratively with Claude. I'm flagging that up fron
 ## Contact
 
 Liam Moore — Bolton, Greater Manchester
+
+
+## Live NDA triage endpoint
+
+This repo now includes a production-style serverless endpoint at `api/triage.js` for live NDA triage against a supplied playbook.
+
+### Endpoint
+- `POST /api/triage`
+
+### Request JSON
+```json
+{
+  "apiKey": "sk-ant-...",
+  "ndaText": "full NDA text...",
+  "playbookText": "playbook markdown/text..."
+}
+```
+
+### Response JSON
+- `verdict`: `SIGN` | `NEGOTIATE` | `REJECT`
+- `summary`: concise explanation
+- `flags`: array of clause findings
+- `terminated`: termination reason
+- `turns_used`: number of model turns used
+
+The endpoint validates input lengths, enforces tool-based structured output, and falls back to a severity-derived verdict if the model does not call `finish_review`.
