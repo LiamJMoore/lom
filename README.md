@@ -34,12 +34,25 @@ Vercel will automatically expose `api/triage.js` as a serverless function.
 
 ## Response fields
 
-## A note on how this was built
+## Local checks
 
-This submission was built collaboratively with Claude. I'm flagging that up front in the document itself (see the disclosure block near the top), because pretending I wrote two thousand lines of CSS and JavaScript by hand in a focused day would be the wrong opening move with a security team. The framing, the architectural decisions, and the editorial judgment are mine; Claude wrote most of the code under direction.
+```bash
+npm test
+node --check api/triage.js
+python -m py_compile triage_nda.py
+```
 
-## Contact
+## Deploy to Vercel
 
+1. Push `main` to GitHub.
+2. Import the repo in Vercel (or reconnect if already linked).
+3. Deploy.
+
+Vercel will expose `api/triage.js` as a serverless function.
+
+## Security note
+
+For production systems, prefer server-managed Anthropic credentials plus authentication/rate limiting, rather than caller-supplied API keys.
 Liam Moore — Bolton, Greater Manchester
 
 
