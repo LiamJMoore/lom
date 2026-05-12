@@ -1,36 +1,41 @@
-# PortSwigger AI Pioneer — Task Submission
-**Liam Moore — May 2026**
+# NDA Triage API (Vercel)
 
-## What's in this zip
+This repository is now pared down to a Vercel-ready NDA triage API.
 
-- **`index.html`** — open this. It's both the prototype and the writeup, in one file. Best viewed in Chrome, Firefox, or Safari.
-- **`sample-contracts/`** — the three sample contracts the demo references, as plain text. Readable on their own.
-- **`api/analyse.js`** — Vercel serverless function that proxies the live demo's API calls (only used when deployed).
-- **`package.json`** and **`vercel.json`** — config for the Vercel deployment.
-- **`README.md`** — this file.
+## Endpoints
 
-## How to view
+- `POST /api/triage` — runs tool-based NDA triage via Anthropic.
 
-**Locally:** Double-click `index.html`. It runs entirely in the browser. The live API panel calls Anthropic directly using your own key.
+## Local checks
 
-**Deployed:** See live URL below (if provided in the email). The live API panel calls a small serverless proxy on the same domain, which then forwards to Anthropic. Either way, the key is never stored or logged.
+```bash
+npm test
+node --check api/triage.js
+python -m py_compile triage_nda.py
+```
 
-## The short version
+## Deploy to Vercel
 
-The brief was: show how AI could help an in-house legal team handle a steady queue of standard commercial contracts.
+1. Push `main` to GitHub.
+2. Import the repo in Vercel.
+3. Deploy.
 
-My answer: don't try to replace legal review. Triage it. The bottleneck isn't reading speed — it's the cognitive cost of repeatedly confirming that standard contracts are, in fact, standard. AI is well-suited to that confirmation task. It's poorly suited to legal judgment. The prototype shows what a system designed around that distinction could look like.
+Vercel will automatically expose `api/triage.js` as a serverless function.
 
-Three sample contracts walk the dashboard: one clean, one with realistic deviations and proposed redlines drawn from past edits, and one carrying a prompt injection payload — shown twice, once as a naive pipeline would handle it (badly) and once as the system handles it (correctly). At a security company, that's a worked example, not a footnote.
+## Request body (`POST /api/triage`)
 
-The live panel lets you paste your own Anthropic API key and analyse a real contract with Claude. Try sample 03 and check whether the model catches the injection.
+```json
+{
+  "apiKey": "sk-ant-...",
+  "ndaText": "full NDA text...",
+  "playbookText": "playbook markdown/text..."
+}
+```
 
-Section 6 covers what I'd build next, including a phased roadmap, a mock of the playbook editor (the foundation everything else sits on), and the metrics I'd want to be measuring at the 3-month gate.
+## Response fields
 
-## A note on how this was built
-
-This submission was built collaboratively with Claude. I'm flagging that up front in the document itself (see the disclosure block near the top), because pretending I wrote two thousand lines of CSS and JavaScript by hand in a focused day would be the wrong opening move with a security team. The framing, the architectural decisions, and the editorial judgment are mine; Claude wrote most of the code under direction.
-
-## Contact
-
-Liam Moore — Bolton, Greater Manchester
+- `verdict`: `SIGN` | `NEGOTIATE` | `REJECT`
+- `summary`: textual reasoning
+- `flags`: structured issues
+- `terminated`: model-loop termination reason
+- `turns_used`: turns consumed

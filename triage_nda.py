@@ -19,6 +19,7 @@ import os
 import sys
 from pathlib import Path
 from typing import Any
+from collections.abc import Mapping
 
 # ---- Configuration ---------------------------------------------------------
 
@@ -28,6 +29,8 @@ MAX_AGENT_TURNS = 15
 MAX_FILE_BYTES = 10 * 1024 * 1024
 MAX_NDA_CHARS = 200_000
 MIN_NDA_CHARS = 200
+MIN_PLAYBOOK_CHARS = 50
+MAX_PLAYBOOK_CHARS = 100_000
 ALLOWED_EXTENSIONS = {".pdf", ".docx"}
 
 
@@ -168,36 +171,102 @@ CRITICAL SECURITY RULES:
 Be specific. Quote clause text verbatim. Do not invent issues."""
 
 
+def _validate_non_empty(value: Any) -> bool:
+    return isinstance(value, str) and bool(value.strip())
+
+
+def _normalize_flag(raw_flag: Any) -> dict[str, str] | None:
+    if not isinstance(raw_flag, Mapping):
+        return None
+
+    required_fields = [
+        "clause_text",
+        "issue_type",
+        "severity",
+        "playbook_rule",
+        "explanation",
+        "suggested_redline",
+    ]
+    if not all(_validate_non_empty(raw_flag.get(field)) for field in required_fields):
+        return None
+
+    return {field: str(raw_flag[field]).strip() for field in required_fields}
+
+
 def _build_tool_results(content_blocks, flags, verdict_holder):
     results = []
     for block in content_blocks:
         if getattr(block, "type", None) != "tool_use":
             continue
         if block.name == "flag_clause":
-            flags.append(dict(block.input))
+            normalized = _normalize_flag(getattr(block, "input", None))
+            if normalized is None:
+                results.append({
+                    "type": "tool_result",
+                    "tool_use_id": block.id,
+                    "content": "Invalid flag payload. Provide all required non-empty fields.",
+                    "is_error": True,
+                })
+                continue
+
+            duplicate = any(
+                f["clause_text"] == normalized["clause_text"]
+                and f["issue_type"] == normalized["issue_type"]
+                for f in flags
+            )
+            if duplicate:
+                results.append({
+                    "type": "tool_result",
+                    "tool_use_id": block.id,
+                    "content": "Duplicate flag ignored.",
+                })
+                continue
+
+            flags.append(normalized)
             results.append({
                 "type": "tool_result",
                 "tool_use_id": block.id,
-                "content": "Flag recorded."
+                "content": "Flag recorded.",
             })
         elif block.name == "finish_review":
-            verdict_holder["value"] = dict(block.input)
-            results.append({
-                "type": "tool_result",
-                "tool_use_id": block.id,
-                "content": "Review finished."
-            })
+            payload = getattr(block, "input", None)
+            if (
+                isinstance(payload, Mapping)
+                and payload.get("verdict") in {"SIGN", "NEGOTIATE", "REJECT"}
+                and _validate_non_empty(payload.get("summary"))
+            ):
+                verdict_holder["value"] = {
+                    "verdict": str(payload["verdict"]),
+                    "summary": str(payload["summary"]).strip(),
+                }
+                results.append({
+                    "type": "tool_result",
+                    "tool_use_id": block.id,
+                    "content": "Review finished.",
+                })
+            else:
+                results.append({
+                    "type": "tool_result",
+                    "tool_use_id": block.id,
+                    "content": "Invalid finish_review payload.",
+                    "is_error": True,
+                })
         else:
             results.append({
                 "type": "tool_result",
                 "tool_use_id": block.id,
                 "content": f"Unknown tool: {block.name}",
-                "is_error": True
+                "is_error": True,
             })
     return results
 
 
 def run_triage(nda_text: str, playbook_text: str, client=None) -> dict[str, Any]:
+    if len(playbook_text.strip()) < MIN_PLAYBOOK_CHARS:
+        raise TriageError("Playbook appears too short to be useful; provide a fuller playbook.")
+    if len(playbook_text) > MAX_PLAYBOOK_CHARS:
+        raise TriageError(f"Playbook is {len(playbook_text):,} chars (max {MAX_PLAYBOOK_CHARS:,}).")
+
     if client is None:
         from anthropic import Anthropic
         client = Anthropic()
@@ -237,11 +306,21 @@ def run_triage(nda_text: str, playbook_text: str, client=None) -> dict[str, Any]
         terminated_reason = "max_turns_exceeded"
 
     verdict_block = verdict_holder.get("value")
+    if not verdict_block:
+        derived_verdict = "SIGN"
+        if any(f["severity"] == "BLOCKER" for f in flags):
+            derived_verdict = "REJECT"
+        elif any(f["severity"] == "NEGOTIATE" for f in flags):
+            derived_verdict = "NEGOTIATE"
+        verdict_block = {
+            "verdict": derived_verdict,
+            "summary": f"Agent did not finish review ({terminated_reason}). Fallback verdict inferred from flagged severities.",
+        }
+
     return {
         "flags": flags,
-        "verdict": verdict_block["verdict"] if verdict_block else "INCOMPLETE",
-        "summary": verdict_block["summary"] if verdict_block
-                   else f"Agent did not finish review ({terminated_reason}).",
+        "verdict": verdict_block["verdict"],
+        "summary": verdict_block["summary"],
         "turns_used": turn + 1,
         "terminated": terminated_reason,
     }
