@@ -1,36 +1,63 @@
-# PortSwigger AI Pioneer — Task Submission
-**Liam Moore — May 2026**
+# NDA Triage API (Vercel)
 
-## What's in this zip
+Lightweight API-only repository for triaging NDAs against a playbook using Anthropic tool-calling.
 
-- **`index.html`** — open this. It's both the prototype and the writeup, in one file. Best viewed in Chrome, Firefox, or Safari.
-- **`sample-contracts/`** — the three sample contracts the demo references, as plain text. Readable on their own.
-- **`api/analyse.js`** — Vercel serverless function that proxies the live demo's API calls (only used when deployed).
-- **`package.json`** and **`vercel.json`** — config for the Vercel deployment.
-- **`README.md`** — this file.
+## Endpoint
 
-## How to view
+- `POST /api/triage`
 
-**Locally:** Double-click `index.html`. It runs entirely in the browser. The live API panel calls Anthropic directly using your own key.
+## Request JSON
 
-**Deployed:** See live URL below (if provided in the email). The live API panel calls a small serverless proxy on the same domain, which then forwards to Anthropic. Either way, the key is never stored or logged.
+```json
+{
+  "apiKey": "sk-ant-...",
+  "ndaText": "full NDA text...",
+  "playbookText": "playbook markdown/text..."
+}
+```
 
-## The short version
+### Validation
 
-The brief was: show how AI could help an in-house legal team handle a steady queue of standard commercial contracts.
+- `apiKey` must be a non-empty Anthropic key-like string (`sk-ant-...`).
+- `ndaText` must be 200 to 200,000 chars.
+- `playbookText` must be 50 to 100,000 chars.
 
-My answer: don't try to replace legal review. Triage it. The bottleneck isn't reading speed — it's the cognitive cost of repeatedly confirming that standard contracts are, in fact, standard. AI is well-suited to that confirmation task. It's poorly suited to legal judgment. The prototype shows what a system designed around that distinction could look like.
+## Response JSON
 
-Three sample contracts walk the dashboard: one clean, one with realistic deviations and proposed redlines drawn from past edits, and one carrying a prompt injection payload — shown twice, once as a naive pipeline would handle it (badly) and once as the system handles it (correctly). At a security company, that's a worked example, not a footnote.
+- `verdict`: `SIGN` | `NEGOTIATE` | `REJECT`
+- `summary`: concise explanation
+- `flags`: array of structured findings
+- `terminated`: model-loop termination reason
+- `turns_used`: number of model turns used
 
-The live panel lets you paste your own Anthropic API key and analyse a real contract with Claude. Try sample 03 and check whether the model catches the injection.
+## Quick production smoke test
 
-Section 6 covers what I'd build next, including a phased roadmap, a mock of the playbook editor (the foundation everything else sits on), and the metrics I'd want to be measuring at the 3-month gate.
+```bash
+curl -X POST "https://<your-vercel-domain>/api/triage" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "apiKey": "sk-ant-...",
+    "ndaText": "<paste nda text at least 200 chars>",
+    "playbookText": "<paste playbook text at least 50 chars>"
+  }'
+```
 
-## A note on how this was built
+## Local checks
 
-This submission was built collaboratively with Claude. I'm flagging that up front in the document itself (see the disclosure block near the top), because pretending I wrote two thousand lines of CSS and JavaScript by hand in a focused day would be the wrong opening move with a security team. The framing, the architectural decisions, and the editorial judgment are mine; Claude wrote most of the code under direction.
+```bash
+npm test
+node --check api/triage.js
+python -m py_compile triage_nda.py
+```
 
-## Contact
+## Deploy to Vercel
 
-Liam Moore — Bolton, Greater Manchester
+1. Push `main` to GitHub.
+2. Import the repo in Vercel (or reconnect if already linked).
+3. Deploy.
+
+Vercel will expose `api/triage.js` as a serverless function.
+
+## Security note
+
+For production systems, prefer server-managed Anthropic credentials plus authentication/rate limiting, rather than caller-supplied API keys.
