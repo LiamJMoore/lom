@@ -1,82 +1,20 @@
-# NDA Triage API (Vercel)
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+</div>
 
-This repository is now pared down to a Vercel-ready NDA triage API.
+# Run and deploy your AI Studio app
 
-## Endpoints
+This contains everything you need to run your app locally.
 
-- `POST /api/triage` — runs tool-based NDA triage via Anthropic.
+View your app in AI Studio: https://ai.studio/apps/fa577eda-9146-4064-9416-aec0b211cb14
 
-## Local checks
+## Run Locally
 
-```bash
-npm test
-node --check api/triage.js
-python -m py_compile triage_nda.py
-```
-
-## Deploy to Vercel
-
-1. Push `main` to GitHub.
-2. Import the repo in Vercel.
-3. Deploy.
-
-Vercel will automatically expose `api/triage.js` as a serverless function.
-
-## Request body (`POST /api/triage`)
-
-```json
-{
-  "apiKey": "sk-ant-...",
-  "ndaText": "full NDA text...",
-  "playbookText": "playbook markdown/text..."
-}
-```
-
-## Response fields
-
-## Local checks
-
-```bash
-npm test
-node --check api/triage.js
-python -m py_compile triage_nda.py
-```
-
-## Deploy to Vercel
-
-1. Push `main` to GitHub.
-2. Import the repo in Vercel (or reconnect if already linked).
-3. Deploy.
-
-Vercel will expose `api/triage.js` as a serverless function.
-
-## Security note
-
-For production systems, prefer server-managed Anthropic credentials plus authentication/rate limiting, rather than caller-supplied API keys.
-Liam Moore — Bolton, Greater Manchester
+**Prerequisites:**  Node.js
 
 
-## Live NDA triage endpoint
-
-This repo now includes a production-style serverless endpoint at `api/triage.js` for live NDA triage against a supplied playbook.
-
-### Endpoint
-- `POST /api/triage`
-
-### Request JSON
-```json
-{
-  "apiKey": "sk-ant-...",
-  "ndaText": "full NDA text...",
-  "playbookText": "playbook markdown/text..."
-}
-```
-
-### Response JSON
-- `verdict`: `SIGN` | `NEGOTIATE` | `REJECT`
-- `summary`: concise explanation
-- `flags`: array of clause findings
-- `terminated`: termination reason
-- `turns_used`: number of model turns used
-
-The endpoint validates input lengths, enforces tool-based structured output, and falls back to a severity-derived verdict if the model does not call `finish_review`.
+1. Install dependencies:
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`

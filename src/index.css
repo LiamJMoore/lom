@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@300;400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", serif;
+  --font-display: "Space Grotesk", sans-serif;
+  
+  --color-limestone: #F8F7F2;
+  --color-moss: #4A4A35;
+  --color-charcoal: #121212;
+  --color-clay: #DED6C4;
+}
+
+@layer base {
+  body {
+    @apply bg-limestone text-charcoal font-sans antialiased overflow-x-hidden;
+  }
+}
+
+/* Custom Cursor - For that 'Designer' feel */
+.custom-cursor {
+  @apply fixed w-4 h-4 bg-moss rounded-full pointer-events-none z-[9999] mix-blend-difference transition-transform duration-150 ease-out;
+}
+
+.magnetic-btn {
+  @apply transition-transform duration-300 ease-out hover:scale-105 active:scale-95;
+}
+
+.text-reveal {
+  @apply relative inline-block overflow-hidden align-bottom;
+}
+
+.editorial-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1rem;
+}
+
+.glass-nav-premium {
+  @apply bg-limestone/40 backdrop-blur-xl border-b border-charcoal/5;
+}
+
+.mask-fade-in {
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
